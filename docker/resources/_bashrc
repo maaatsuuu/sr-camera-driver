@@ -1,0 +1,53 @@
+alias sudo='sudo -E -H '
+alias ll='ls -alF'
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
+# display current git branch on prompt
+if [ -f /etc/bash_completion.d/git-prompt ]; then
+    export PS1='\[\033[01;32m\]\u@\h\[\033[01;33m\] \w$(__git_ps1) \n\[\033[01;34m\]\$\[\033[00m\] '
+else
+    export PS1='\[\033[01;32m\]\u@\h\[\033[01;33m\] \w \n\[\033[01;34m\]\$\[\033[00m\] '
+fi
+
+# python venv settings
+if [ -n "${VIRTUAL_ENV:-}" ] && [ -f "${VIRTUAL_ENV}/bin/activate" ]; then
+  source "${VIRTUAL_ENV}/bin/activate"
+fi
+export PYTHONPATH=$(python -c 'import site; print(site.getsitepackages()[0])'):$PYTHONPATH
+
+# set locale settings
+export LANG=ja_JP.UTF-8
+
+# set ROS_DISTRO environment variable for prompt
+export PS1='\e[31m[ros2_docker:${ROS_DISTRO}]\e[0m\n${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+
+# build, test, format and lint tools settings
+export PATH=${HOME}/tools/colcon:${PATH}
+export PATH=${HOME}/tools/format:${PATH}
+export PATH=${HOME}/tools/lint:${PATH}
+
+# set host-specific environment settings
+: "${SOURCE_DIR:=${HOME}/ros2_ws/src}"
+HOST_CFG_FILE=${SOURCE_DIR}/tools/host_cfg.env
+if [ -f "${HOST_CFG_FILE}" ]; then
+  set -a
+  source "${HOST_CFG_FILE}"
+  set +a
+fi
+
+# ros settings
+ROS2_WS=${HOME}/ros2_ws
+source /opt/ros/${ROS_DISTRO}/setup.bash
+source ${ROS2_WS}/install/setup.bash
+
+export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp

@@ -1,0 +1,11 @@
+ws/*
+**/log/
+**/build
+**/install
+**/__pycache__/
+**/.vscode/
+
+/src/bringup/config/livox/*.json
+/src/bringup/config/livox/*.rviz
+/src/third_party/livox/livox_ros_driver2/package.xml
+/src/tools/host_cfg.env
