@@ -42,7 +42,7 @@ while getopts n:t:w:gh OPT; do
       ;;
     t) IMAGE="${DOCKER_IMAGE_NAME}:${OPTARG}" ;;
     w) WORKSPACE_DIR="${OPTARG}" ;;
-    g) RUNTIME="--runtime=nvidia" ;;
+    g) RUNTIME+="--runtime=nvidia" ;;
     h)
       echo "Usage: $(basename $0) [OPTIONS]"
       echo "Options:"
