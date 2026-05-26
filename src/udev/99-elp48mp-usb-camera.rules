@@ -1,0 +1,2 @@
+# Set idVendor/idProduct/serial/symlink-name with actual values from `lsusb`.
+SUBSYSTEM=="video4linux", KERNEL=="video*", ATTRS{idVendor}=="32e4", ATTRS{idProduct}=="4802", ATTRS{serial}=="2023081002", ATTR{index}=="0", SYMLINK+="usbcam-elp48mp-1", MODE="0666"
