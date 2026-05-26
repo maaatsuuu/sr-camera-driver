@@ -1,0 +1,60 @@
+camera:
+  name: "elp48mp"
+  type: "usb"
+  backend: "gstreamer"
+
+gstreamer:
+  device: "${ELP_DEVICE}"
+  do_timestamp: true
+  input_caps: "image/jpeg"
+  default_preset: "${ELP_PRESET}"
+
+  pipeline_template: >
+    v4l2src device=${device} do-timestamp=${do_timestamp} !
+    ${input_caps},width=${width},height=${height},framerate=${fps_num}/${fps_den} !
+    jpegdec !
+    videoconvert
+
+  preview_sink: "autovideosink"
+
+  presets:
+    mp02_1920x1080_30:
+      width: 1920
+      height: 1080
+      fps_num: 30
+      fps_den: 1
+
+    mp12_4000x3000_15:
+      width: 4000
+      height: 3000
+      fps_num: 15
+      fps_den: 1
+
+    mp16_4608x3456_15:
+      width: 4608
+      height: 3456
+      fps_num: 15
+      fps_den: 1
+
+    mp48_8000x6000_5:
+      width: 8000
+      height: 6000
+      fps_num: 5
+      fps_den: 1
+
+gscam2:
+  gst_plugin_path: ""
+  gscam_config: ""        # launch側で生成
+  sync_sink: true
+  preroll: false
+  use_gst_timestamps: true
+  image_encoding: "rgb8"
+  camera_info_url: ""
+  camera_name: "${ELP_CAMERA_NAME}"
+  frame_id: "${ELP_FRAME_ID}"
+  skip: 0
+
+ros:
+  namespace: "${ELP_NAMESPACE}"
+  image_topic: "image_raw"
+  camera_info_topic: "camera_info"

@@ -1,0 +1,38 @@
+camera:
+  name: "routecam"
+  type: "rtsp"
+  backend: "gstreamer"
+
+gstreamer:
+  ip: "${ROUTECAM_IP}"
+  rtsp_port: "${ROUTECAM_RTSP_PORT}"
+  rtsp_path: "${ROUTECAM_RTSP_PATH}"
+  latency: "${ROUTECAM_LATENCY}"
+  default_preset: "${ROUTECAM_PRESET}"
+
+  pipeline_template: >
+    rtspsrc location=rtsp://${ip}:${rtsp_port}${rtsp_path} latency=${latency} !
+    decodebin !
+    videoconvert
+
+  preview_sink: "autovideosink"
+
+  presets:
+    rtsp_1080p: {}
+
+gscam2:
+  gst_plugin_path: ""
+  gscam_config: ""
+  sync_sink: true
+  preroll: false
+  use_gst_timestamps: false
+  image_encoding: "rgb8"
+  camera_info_url: ""
+  camera_name: "${ROUTECAM_CAMERA_NAME}"
+  frame_id: "${ROUTECAM_FRAME_ID}"
+  skip: 0
+
+ros:
+  namespace: "${ROUTECAM_NAMESPACE}"
+  image_topic: "image_raw"
+  camera_info_topic: "camera_info"
