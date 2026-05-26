@@ -8,3 +8,4 @@ ws/*
 /src/bringup/config/livox/*.json
 /src/bringup/config/livox/*.rviz
 /docker/host_cfg.env
+/data/images/
