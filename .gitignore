@@ -7,4 +7,4 @@ ws/*
 
 /src/bringup/config/livox/*.json
 /src/bringup/config/livox/*.rviz
-/src/tools/host_cfg.env
+/docker/host_cfg.env

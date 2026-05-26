@@ -3,8 +3,10 @@
 unset ROS_DISTRO
 unset DOCKER_IMAGE_NAME
 unset IMAGE_TAG
-THIS_DIR="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${THIS_DIR}/.." && pwd)"
 CONFIG_FILE="${THIS_DIR}/image.env"
+HOST_CFG_FILE="${THIS_DIR}/host_cfg.env"
 
 if [[ -f "${CONFIG_FILE}" ]]; then
   # shellcheck disable=SC1090
@@ -16,7 +18,7 @@ fi
 
 : "${IMAGE:=${DOCKER_IMAGE_NAME}:${IMAGE_TAG}}"
 : "${WORKSPACE_DIR:=${THIS_DIR}/ws}"
-: "${SOURCE_DIR:=${THIS_DIR}/../src}"
+: "${SOURCE_DIR:=${REPO_ROOT}/src}"
 
 USER_ID=$(id -u ${USER})
 GROUP_ID=$(id -g ${USER})
@@ -24,6 +26,13 @@ COMMAND="${USER} ${USER_ID} ${GROUP_ID}"
 
 NAME=""
 RUNTIME=""
+ENV_FILES=""
+
+if [[ -f "${HOST_CFG_FILE}" ]]; then
+  ENV_FILES="--env-file=${HOST_CFG_FILE}"
+else
+  echo "[WARN] Host config not found: ${HOST_CFG_FILE}"
+fi
 
 # add camera device link if available
 CAMERA_LINK="/dev/usbcam-elp48mp-1"
@@ -106,4 +115,4 @@ if [ -e /run/user/${USER_ID}/bus ]; then
 fi
 
 xhost + local:${USER}
-docker run -it ${RUNTIME} ${NETWORK_MODE} ${WORKING_DIR} ${ENVIRONMENT} ${VOLUMES} ${NAME} --privileged --rm ${IMAGE} ${COMMAND}
+docker run -it ${RUNTIME} ${NETWORK_MODE} ${ENV_FILES} ${WORKING_DIR} ${ENVIRONMENT} ${VOLUMES} ${NAME} --privileged --rm ${IMAGE} ${COMMAND}

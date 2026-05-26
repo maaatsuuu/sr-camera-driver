@@ -1,9 +1,10 @@
 #!/bin/bash -eu
 
-THIS_DIR="$(cd $(dirname "${BASH_SOURCE[0]}") && pwd)"
-SRC_DIR="$(cd "${THIS_DIR}/.." && pwd)"
+THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${THIS_DIR}/.." && pwd)"
+SRC_DIR="${REPO_ROOT}/src"
 
-HOST_CFG_FILE="${THIS_DIR}/host_cfg.env"
+HOST_CFG_FILE="${REPO_ROOT}/docker/host_cfg.env"
 LIVOX_BRINGUP_CONFIG_DIR="${SRC_DIR}/bringup/config/livox"
 LIVOX_MID360_CONFIG="${LIVOX_BRINGUP_CONFIG_DIR}/MID360_config.json"
 LIVOX_MID360S_CONFIG="${LIVOX_BRINGUP_CONFIG_DIR}/MID360s_config.json"
@@ -31,7 +32,7 @@ done
 
 if [ ! -f "${HOST_CFG_FILE}" ]; then
   echo "host config file is not found: ${HOST_CFG_FILE}" >&2
-  echo "run ./src/tools/copy_assets.sh first, then edit src/tools/host_cfg.env" >&2
+  echo "run ./tools/copy_assets.sh first, then edit docker/host_cfg.env" >&2
   exit 1
 fi
 
@@ -103,4 +104,4 @@ echo "Updated Livox config files:"
 echo "  ${LIVOX_MID360_CONFIG}"
 echo "  ${LIVOX_MID360S_CONFIG}"
 echo
-echo "Frame and topic settings are loaded from host_cfg.env by the container shell."
+echo "Frame and topic settings are loaded from docker/host_cfg.env by start_env.sh."

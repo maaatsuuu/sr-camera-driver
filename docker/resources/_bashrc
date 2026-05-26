@@ -36,15 +36,6 @@ export PATH=${HOME}/tools/colcon:${PATH}
 export PATH=${HOME}/tools/format:${PATH}
 export PATH=${HOME}/tools/lint:${PATH}
 
-# set host-specific environment settings
-: "${SOURCE_DIR:=${HOME}/ros2_ws/src}"
-HOST_CFG_FILE=${SOURCE_DIR}/tools/host_cfg.env
-if [ -f "${HOST_CFG_FILE}" ]; then
-  set -a
-  source "${HOST_CFG_FILE}"
-  set +a
-fi
-
 # ros settings
 ROS2_WS=${HOME}/ros2_ws
 source /opt/ros/${ROS_DISTRO}/setup.bash
