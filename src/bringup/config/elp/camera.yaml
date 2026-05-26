@@ -11,36 +11,75 @@ gstreamer:
 
   pipeline_template: >
     v4l2src device=${device} do-timestamp=${do_timestamp} !
-    ${input_caps},width=${width},height=${height},framerate=${fps_num}/${fps_den} !
-    jpegdec !
-    videoconvert
+    ${input_caps},width=${width},height=${height},framerate=${fps_num}/${fps_den}
+    ${pipeline_tail}
 
   preview_sink: "autovideosink"
 
   presets:
+    mjpeg_mp02_1920x1080_30:
+      width: 1920
+      height: 1080
+      fps_num: 30
+      fps_den: 1
+      image_encoding: "jpeg"
+      pipeline_tail: ""
+
+    mjpeg_mp12_4000x3000_15:
+      width: 4000
+      height: 3000
+      fps_num: 15
+      fps_den: 1
+      image_encoding: "jpeg"
+      pipeline_tail: ""
+
+    mjpeg_mp16_4608x3456_15:
+      width: 4608
+      height: 3456
+      fps_num: 15
+      fps_den: 1
+      image_encoding: "jpeg"
+      pipeline_tail: ""
+
+    mjpeg_mp48_8000x6000_5:
+      width: 8000
+      height: 6000
+      fps_num: 5
+      fps_den: 1
+      image_encoding: "jpeg"
+      pipeline_tail: ""
+
     mp02_1920x1080_30:
       width: 1920
       height: 1080
       fps_num: 30
       fps_den: 1
+      image_encoding: "rgb8"
+      pipeline_tail: "! jpegdec ! videoconvert"
 
     mp12_4000x3000_15:
       width: 4000
       height: 3000
       fps_num: 15
       fps_den: 1
+      image_encoding: "rgb8"
+      pipeline_tail: "! jpegdec ! videoconvert"
 
     mp16_4608x3456_15:
       width: 4608
       height: 3456
       fps_num: 15
       fps_den: 1
+      image_encoding: "rgb8"
+      pipeline_tail: "! jpegdec ! videoconvert"
 
     mp48_8000x6000_5:
       width: 8000
       height: 6000
       fps_num: 5
       fps_den: 1
+      image_encoding: "rgb8"
+      pipeline_tail: "! jpegdec ! videoconvert"
 
 gscam2:
   gst_plugin_path: ""
@@ -48,7 +87,7 @@ gscam2:
   sync_sink: true
   preroll: false
   use_gst_timestamps: true
-  image_encoding: "rgb8"
+  image_encoding: "jpeg"
   camera_info_url: ""
   camera_name: "${ELP_CAMERA_NAME}"
   frame_id: "${ELP_FRAME_ID}"

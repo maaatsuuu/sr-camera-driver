@@ -18,9 +18,7 @@ def build_gstreamer_pipeline(
     """GStreamer pipeline文字列の生成"""
     gstreamer = config.gstreamer
     preset = _get_capture_preset(gstreamer, preset_name)
-    values = _build_template_values(gstreamer, preset)
-    pipeline = _render_pipeline_template(gstreamer.pipeline_template, values)
-    return _normalize_pipeline(pipeline)
+    return _build_pipeline_from_preset(gstreamer, preset)
 
 
 def build_gstreamer_preview_pipeline(
@@ -63,6 +61,16 @@ def _build_template_values(
         if value is not None
     })
     return values
+
+
+def _build_pipeline_from_preset(
+    config: GstreamerConfig,
+    preset: CapturePreset,
+) -> str:
+    """プリセット指定pipelineの生成"""
+    values = _build_template_values(config, preset)
+    pipeline = _render_pipeline_template(config.pipeline_template, values)
+    return _normalize_pipeline(pipeline)
 
 
 def _render_pipeline_template(

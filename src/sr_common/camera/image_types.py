@@ -61,6 +61,7 @@ class CapturePreset:
     height: int | None = None
     fps_num: int | None = None
     fps_den: int | None = None
+    image_encoding: str | None = None
     extra: dict[str, Any] = field(default_factory=dict)
 
 

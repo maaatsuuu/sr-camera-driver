@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import replace
 import os
 import re
 from pathlib import Path
@@ -35,13 +36,15 @@ def load_camera_config(
     gstreamer = _require_mapping(config, "gstreamer")
     gscam2 = _require_mapping(config, "gscam2")
     ros = _require_mapping(config, "ros")
+    gstreamer_config = _create_gstreamer_config(gstreamer, env_map)
+    gscam2_config = _create_gscam2_config(gscam2, env_map)
 
     return ResolvedCameraConfig(
         name=str(_resolve_env(camera["name"], env_map)),
         type=str(_resolve_env(camera["type"], env_map)),
         backend=str(_resolve_env(camera["backend"], env_map)),
-        gstreamer=_create_gstreamer_config(gstreamer, env_map),
-        gscam2=_create_gscam2_config(gscam2, env_map),
+        gstreamer=gstreamer_config,
+        gscam2=_apply_default_preset_overrides(gscam2_config, gstreamer_config),
         ros=_create_ros_config(ros, env_map),
     )
 
@@ -120,13 +123,14 @@ def _create_capture_preset(name: str, data: Any) -> CapturePreset:
     if not isinstance(data, dict):
         raise ValueError(f"capture preset must be a mapping: {name}")
 
-    known_keys = {"width", "height", "fps_num", "fps_den"}
+    known_keys = {"width", "height", "fps_num", "fps_den", "image_encoding"}
     return CapturePreset(
         name=str(name),
         width=data.get("width"),
         height=data.get("height"),
         fps_num=data.get("fps_num"),
         fps_den=data.get("fps_den"),
+        image_encoding=data.get("image_encoding"),
         extra={key: value for key, value in data.items() if key not in known_keys},
     )
 
@@ -162,6 +166,21 @@ def _create_ros_config(
         image_topic=str(resolved.get("image_topic", "image_raw")),
         camera_info_topic=str(resolved.get("camera_info_topic", "camera_info")),
     )
+
+
+def _apply_default_preset_overrides(
+    gscam2: Gscam2Config,
+    gstreamer: GstreamerConfig,
+) -> Gscam2Config:
+    """default preset値の反映。"""
+    try:
+        preset = gstreamer.presets[gstreamer.default_preset]
+    except KeyError as exc:
+        raise KeyError(f"default capture preset is not defined: {gstreamer.default_preset}") from exc
+
+    if preset.image_encoding is None:
+        return gscam2
+    return replace(gscam2, image_encoding=str(preset.image_encoding))
 
 
 __all__ = ["load_camera_config"]
