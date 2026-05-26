@@ -24,6 +24,16 @@ COMMAND="${USER} ${USER_ID} ${GROUP_ID}"
 
 NAME=""
 RUNTIME=""
+
+# add camera device link if available
+CAMERA_LINK="/dev/usbcam-elp48mp-1"
+if [[ -e "${CAMERA_LINK}" ]]; then
+  CAMERA_REAL="$(readlink -f "${CAMERA_LINK}")"
+  RUNTIME+=" --device=${CAMERA_REAL}:${CAMERA_LINK}"
+else
+  echo "[WARN] USB camera device not found: ${CAMERA_LINK}"
+fi
+
 while getopts n:t:w:gh OPT; do
   case ${OPT} in
     n)
