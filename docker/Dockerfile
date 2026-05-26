@@ -177,14 +177,14 @@ RUN /bin/bash -c "apt update && \
 # LiDAR SDK installation
 #########################################################################################
 
-COPY docker/scripts/install_livox_sdk2.sh .
-COPY src/third_party/livox/Livox-SDK2 /tmp/Livox-SDK2
-RUN sed -i "s/sudo //" install_livox_sdk2.sh
-RUN /bin/bash -c "apt update && \
-                 ./install_livox_sdk2.sh /tmp/Livox-SDK2 && \
-                 rm -rf /var/lib/apt/lists/* && \
-                 rm -rf /tmp/Livox-SDK2 && \
-                 rm install_livox_sdk2.sh"
+# COPY docker/scripts/install_livox_sdk2.sh .
+# COPY src/third_party/livox/Livox-SDK2 /tmp/Livox-SDK2
+# RUN sed -i "s/sudo //" install_livox_sdk2.sh
+# RUN /bin/bash -c "apt update && \
+#                  ./install_livox_sdk2.sh /tmp/Livox-SDK2 && \
+#                  rm -rf /var/lib/apt/lists/* && \
+#                  rm -rf /tmp/Livox-SDK2 && \
+#                  rm install_livox_sdk2.sh"
 
 
 #########################################################################################
