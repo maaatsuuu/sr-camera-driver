@@ -172,21 +172,6 @@ RUN /bin/bash -c "apt update && \
                  rm -rf /var/lib/apt/lists/* && \
                  rm install_ros_packages.sh"
 
-
-#########################################################################################
-# LiDAR SDK installation
-#########################################################################################
-
-# COPY docker/scripts/install_livox_sdk2.sh .
-# COPY src/third_party/livox/Livox-SDK2 /tmp/Livox-SDK2
-# RUN sed -i "s/sudo //" install_livox_sdk2.sh
-# RUN /bin/bash -c "apt update && \
-#                  ./install_livox_sdk2.sh /tmp/Livox-SDK2 && \
-#                  rm -rf /var/lib/apt/lists/* && \
-#                  rm -rf /tmp/Livox-SDK2 && \
-#                  rm install_livox_sdk2.sh"
-
-
 #########################################################################################
 # entrypoint generation for workspace initialization
 # - delete default user (ubuntu) to avoid conflicts with host user.
