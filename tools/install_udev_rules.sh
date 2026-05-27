@@ -1,63 +1,60 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash -eu
 
 THIS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+REPO_ROOT="$(cd "${THIS_DIR}/.." && pwd)"
 
-RULES_SRC="${THIS_DIR}/../udev/99-elp48mp-usb-camera.rules"
-RULES_DST="/etc/udev/rules.d/99-elp48mp-usb-camera.rules"
+RULES_SRC_DIR="${REPO_ROOT}/udev"
+RULES_DST_DIR="/etc/udev/rules.d"
 
-echo "[INFO] Installing udev rules for ELP 48MP USB camera"
+usage() {
+  echo "Usage: sudo $(basename $0) [OPTIONS]"
+  echo "Options:"
+  echo " -h    show this help"
+}
 
-# --- sanity check -----------------------------------------------------------
-if [[ ! -f "${RULES_SRC}" ]]; then
-  echo "[ERROR] Rules file not found: ${RULES_SRC}" >&2
+while getopts h OPT; do
+  case "${OPT}" in
+    h)
+      usage
+      exit 0
+      ;;
+    *)
+      usage
+      exit 1
+      ;;
+  esac
+done
+
+if [ "${EUID}" -ne 0 ]; then
+  echo "run with sudo: sudo $0" >&2
   exit 1
 fi
 
-# --- require sudo -----------------------------------------------------------
-if [[ ${EUID} -ne 0 ]]; then
-  echo "[ERROR] This script must be run with sudo"
-  echo "        Try: sudo $0"
+if [ ! -d "${RULES_SRC_DIR}" ]; then
+  echo "udev rule directory is not found: ${RULES_SRC_DIR}" >&2
   exit 1
 fi
 
-# --- install rules (idempotent) ---------------------------------------------
-if [[ -f "${RULES_DST}" ]]; then
-  if cmp -s "${RULES_SRC}" "${RULES_DST}"; then
-    echo "[INFO] udev rules already installed (no changes)"
-  else
-    echo "[INFO] Updating existing udev rules"
-    cp "${RULES_SRC}" "${RULES_DST}"
+shopt -s nullglob
+rule_files=("${RULES_SRC_DIR}"/*.rules)
+if [ "${#rule_files[@]}" -eq 0 ]; then
+  echo "udev rule file is not found: ${RULES_SRC_DIR}/*.rules" >&2
+  exit 1
+fi
+
+for src_file in "${rule_files[@]}"; do
+  dst_file="${RULES_DST_DIR}/$(basename "${src_file}")"
+  if [ -f "${dst_file}" ] && cmp -s "${src_file}" "${dst_file}"; then
+    echo "skip unchanged: ${dst_file}"
+    continue
   fi
-else
-  echo "[INFO] Installing new udev rules"
-  cp "${RULES_SRC}" "${RULES_DST}"
-fi
+  cp "${src_file}" "${dst_file}"
+  chmod 644 "${dst_file}"
+  echo "installed: ${dst_file}"
+done
 
-# --- permissions ------------------------------------------------------------
-chmod 666 "${RULES_DST}"
-
-# --- reload udev ------------------------------------------------------------
-echo "[INFO] Reloading udev rules"
 udevadm control --reload-rules
 udevadm trigger
 
-# --- dialout group ----------------------------------------------------------
-TARGET_USER="${SUDO_USER:-}"
-
-if [[ -n "${TARGET_USER}" ]]; then
-  if id -nG "${TARGET_USER}" | grep -qw dialout; then
-    echo "[INFO] User '${TARGET_USER}' already in dialout group"
-  else
-    echo "[INFO] Adding user '${TARGET_USER}' to dialout group"
-    usermod -aG dialout "${TARGET_USER}"
-    echo "[INFO] Re-login required for group change to take effect"
-  fi
-else
-  echo "[WARN] Could not determine non-root user for dialout group"
-fi
-
-echo "[INFO] Done."
-echo "[INFO] Check with:"
-echo "       ls -l /dev/usbcam-elp48mp-1"
-echo "[INFO] Re-plug the USB camera if it is already connected."
+echo "udev rules are ready."
+echo "re-plug USB cameras if they are already connected."
