@@ -11,7 +11,7 @@ from sr_common.camera.image_types import EncodedImageData
 
 
 DEFAULT_IMAGE_OUTPUT_DIR = (
-    Path(os.environ.get("WORKSPACE_DIR", Path.home() / "ros2_ws")) / "data" / "images"
+    Path(os.environ.get("WORKSPACE_DIR", Path.home() / "ros2_ws")) / "src"/ "data" / "images"
 )
 
 

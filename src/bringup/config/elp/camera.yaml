@@ -23,7 +23,7 @@ gstreamer:
       fps_num: 30
       fps_den: 1
       image_encoding: "jpeg"
-      pipeline_tail: ""
+      pipeline_tail: "! jpegparse"
 
     mjpeg_mp12_4000x3000_15:
       width: 4000
@@ -31,7 +31,7 @@ gstreamer:
       fps_num: 15
       fps_den: 1
       image_encoding: "jpeg"
-      pipeline_tail: ""
+      pipeline_tail: "! jpegparse"
 
     mjpeg_mp16_4608x3456_15:
       width: 4608
@@ -39,7 +39,7 @@ gstreamer:
       fps_num: 15
       fps_den: 1
       image_encoding: "jpeg"
-      pipeline_tail: ""
+      pipeline_tail: "! jpegparse"
 
     mjpeg_mp48_8000x6000_5:
       width: 8000
@@ -47,7 +47,7 @@ gstreamer:
       fps_num: 5
       fps_den: 1
       image_encoding: "jpeg"
-      pipeline_tail: ""
+      pipeline_tail: "! jpegparse"
 
     mp02_1920x1080_30:
       width: 1920
