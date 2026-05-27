@@ -17,6 +17,7 @@ setup(
         ("share/" + package_name, ["package.xml"]),
         (join("share", package_name, "launch"), glob("launch/*.launch.py")),
         (join("share", package_name, "config", "elp"), glob("config/elp/*.yaml")),
+        (join("share", package_name, "config", "elp"), glob("config/elp/*.rviz")),
         (join("share", package_name, "config", "routecam"), glob("config/routecam/*.yaml")),
     ],
     install_requires=["setuptools"],
