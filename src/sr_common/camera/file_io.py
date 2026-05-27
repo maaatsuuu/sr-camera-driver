@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime
+import os
 from pathlib import Path
 
 import cv2
@@ -9,7 +10,9 @@ from sr_common.camera.image_types import DecodedImageData
 from sr_common.camera.image_types import EncodedImageData
 
 
-DEFAULT_IMAGE_OUTPUT_DIR = Path("data/images")
+DEFAULT_IMAGE_OUTPUT_DIR = (
+    Path(os.environ.get("WORKSPACE_DIR", Path.home() / "ros2_ws")) / "data" / "images"
+)
 
 
 def build_timestamped_image_path(

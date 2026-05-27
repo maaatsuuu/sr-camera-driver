@@ -6,4 +6,4 @@ ws/*
 **/.vscode/
 
 /docker/host_cfg.env
-/data/images/
+/src/data/

@@ -84,7 +84,7 @@ gstreamer:
 gscam2:
   gst_plugin_path: ""
   gscam_config: ""        # launch側で生成
-  sync_sink: true
+  sync_sink: false
   preroll: false
   use_gst_timestamps: true
   image_encoding: "jpeg"
