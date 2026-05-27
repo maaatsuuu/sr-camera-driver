@@ -23,7 +23,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'sample_client_console = client_console.sample_client_console:main',
+            'sr_client_console = client_console.sr_client_console:main',
         ],
     },
 )
