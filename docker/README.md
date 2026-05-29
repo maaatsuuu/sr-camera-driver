@@ -49,7 +49,7 @@ Sample ROS 2 environment in Docker.
 4. Prepare local Livox configuration files:
 
     ```sh
-    cd ../src/tools
+    cd ../tools
     ./copy_assets.sh
     ```
 
@@ -57,7 +57,7 @@ Sample ROS 2 environment in Docker.
 
 5. Edit host-specific LiDAR settings:
 
-    Edit `src/tools/host_cfg.env` from the repository root.
+    Edit `docker/host_cfg.env` from the repository root.
 
     ```sh
     LIVOX_HOST_IP="192.168.1.50"
@@ -70,7 +70,7 @@ Sample ROS 2 environment in Docker.
 6. Apply the host-specific settings:
 
     ```sh
-    cd ../src/tools
+    cd ../tools
     ./set_host_cfg.sh
     ```
 
